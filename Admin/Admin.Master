@@ -1,0 +1,76 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.master.cs" Inherits="LexiPath.Admin.Admin" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - LexiPath</title>
+    
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href="~/Content/Admin.css" rel="stylesheet" />
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server" enctype="multipart/form-data">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        <div class="admin-wrapper">
+            
+            <nav class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h3>LexiPath Admin</h3>
+                </div>
+                <ul class="list-unstyled components">
+                    <li>
+                        <a href="AdminDashboard.aspx"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="ManageUsers.aspx"><i class="bi bi-people-fill"></i> Manage Users</a>
+                    </li>
+                    <li>
+                        <a href="ManageCategories.aspx"><i class="bi bi-tags-fill"></i> Manage Categories</a>
+                    </li>
+                    <li>
+                        <a href="ManageCourses.aspx"><i class="bi bi-book-fill"></i> Manage Courses</a>
+                    </li>
+                    <li>
+                        <a href="ManageQuizzes.aspx"><i class="bi bi-patch-question-fill"></i> Manage Quizzes</a>
+                    </li>
+                    <li>
+                        <a href="/Home.aspx" target="_blank"><i class="bi bi-box-arrow-up-right"></i> View Main Site</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="admin-content">
+                
+                <nav class="admin-top-nav">
+                    <asp:Panel ID="pnlUser" runat="server" Visible="false" CssClass="nav-item dropdown">
+                        <asp:Image ID="imgAvatar" runat="server" 
+                            CssClass="dropdown-toggle" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="../Profile.aspx">My Profile</a></li>
+                            <li><a class="dropdown-item" href="../Logout.aspx">Logout</a></li>
+                        </ul>
+                    </asp:Panel>
+                </nav>
+
+                <main class="admin-page-content">
+                    <asp:ContentPlaceHolder ID="AdminContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </main>
+            </div>
+            
+        </div>
+        
+        <script src="/Scripts/bootstrap.bundle.min.js"></script>
+    </form>
+</body>
+</html>
