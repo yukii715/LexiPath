@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq; // Add this
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -33,7 +33,7 @@ namespace LexiPath.Admin
         // Fills a language dropdown
         private void BindLanguageDropdown(DropDownList ddl)
         {
-            ddl.DataSource = courseManager.GetAllLanguages(); // You need to add GetAllLanguages to QuizManager or use CourseManager
+            ddl.DataSource = courseManager.GetAllLanguages();
             ddl.DataTextField = "LanguageName";
             ddl.DataValueField = "LanguageID";
             ddl.DataBind();
@@ -42,7 +42,7 @@ namespace LexiPath.Admin
         // Fills a course listbox
         private void BindCourseList(ListBox lst)
         {
-            lst.DataSource = manager.GetAllCourses(); // Use QuizManager's method
+            lst.DataSource = manager.GetAllCourses();
             lst.DataTextField = "CourseName";
             lst.DataValueField = "CourseID";
             lst.DataBind();
@@ -51,7 +51,7 @@ namespace LexiPath.Admin
         // Fills a tag listbox
         private void BindTagList(ListBox lst)
         {
-            lst.DataSource = manager.GetAllTags(); // Use QuizManager's method
+            lst.DataSource = manager.GetAllTags();
             lst.DataTextField = "TagName";
             lst.DataValueField = "TagID";
             lst.DataBind();
@@ -90,13 +90,10 @@ namespace LexiPath.Admin
         private void ShowAddModal()
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "showAddModal",
-                "var myModalEl = document.getElementById('addQuizModal'); var myModal = new bootstrap.Modal(myModalEl); myModal.show();", true);
+                "var myModalEl = document.getElementById('addQuizModal'); var myModal = new bootstrap.Modal(myModalEl); myModal.Show();", true);
         }
-        private void ShowEditModal()
-        {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "showEditModal",
-                "var myModalEl = document.getElementById('editQuizModal'); var myModal = new bootstrap.Modal(myModalEl); myModal.show();", true);
-        }
+
+        // ShowEditModal() is no longer needed
 
         // Helper to get selected int[] from a ListBox
         private int[] GetSelectedIds(ListBox lst)
@@ -142,7 +139,7 @@ namespace LexiPath.Admin
 
         #endregion
 
-        #region GridView Events (Sort, Edit, Update, Delete)
+        #region GridView Events (Sort, Delete)
 
         protected void gvQuizzes_Sorting(object sender, GridViewSortEventArgs e)
         {
@@ -160,82 +157,25 @@ namespace LexiPath.Admin
                 manager.DeleteQuiz(quizId);
                 BindGrid();
             }
-            else if (e.CommandName == "ShowEditModal")
+            // ADD THIS NEW "else if" BLOCK
+            else if (e.CommandName == "EditQuiz")
             {
+                // 1. Get the QuizID from the button
                 int quizId = Convert.ToInt32(e.CommandArgument);
-                Quiz quiz = manager.GetQuizDetails(quizId);
-                if (quiz == null) return;
 
-                // Populate the Edit Modal
-                hdnEditQuizID.Value = quiz.QuizID.ToString();
-                txtEditTitle.Text = quiz.Title;
-                txtEditDescription.Text = quiz.Description;
-                chkEditIsPractice.Checked = quiz.IsPractice;
-                imgEditPreview.ImageUrl = GetImagePath(quiz.ImagePath);
+                // 2. Store it securely in the Session
+                Session["Admin_EditQuizID"] = quizId;
 
-                // Populate and select dropdowns
-                BindLanguageDropdown(ddlEditLanguage);
-                ddlEditLanguage.SelectedValue = quiz.LanguageID.ToString();
-
-                // Populate and select listboxes
-                BindCourseList(lstEditCourses);
-                BindTagList(lstEditTags);
-
-                // Pre-select items in listboxes
-                var courseIds = quiz.RelatedCourseIDs?.Split(',') ?? new string[0];
-                foreach (ListItem item in lstEditCourses.Items)
-                {
-                    item.Selected = courseIds.Contains(item.Value);
-                }
-
-                var tagIds = quiz.RelatedTagIDs?.Split(',') ?? new string[0];
-                foreach (ListItem item in lstEditTags.Items)
-                {
-                    item.Selected = tagIds.Contains(item.Value);
-                }
-
-                ShowEditModal();
+                // 3. Redirect to the edit page (no QueryString!)
+                Response.Redirect("EditQuiz.aspx");
             }
         }
 
-        protected void btnUpdateQuiz_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int quizId = Convert.ToInt32(hdnEditQuizID.Value);
-                string title = txtEditTitle.Text.Trim();
-                string desc = txtEditDescription.Text.Trim();
-                int langId = Convert.ToInt32(ddlEditLanguage.SelectedValue);
-                bool isPractice = chkEditIsPractice.Checked;
-
-                // dbPath is null if no new file is uploaded
-                string dbPath = HandleFileUpload(fileUploadEditImage, "Quiz");
-
-                int[] courseIds = GetSelectedIds(lstEditCourses);
-                int[] tagIds = GetSelectedIds(lstEditTags);
-
-                if (manager.UpdateQuiz(quizId, title, desc, langId, isPractice, dbPath, courseIds, tagIds))
-                {
-                    BindGrid();
-                }
-                else
-                {
-                    lblEditMessage.Text = "Error updating quiz.";
-                    lblEditMessage.ForeColor = System.Drawing.Color.Red;
-                    ShowEditModal();
-                }
-            }
-            catch (Exception ex)
-            {
-                lblEditMessage.Text = "Error: " + ex.Message;
-                lblEditMessage.ForeColor = System.Drawing.Color.Red;
-                ShowEditModal();
-            }
-        }
+        // btnUpdateQuiz_Click() and related methods have been removed
 
         #endregion
 
-        // Helper for displaying images
+        // Helper for displaying images (still used by Add modal, so keep)
         public string GetImagePath(object imagePath)
         {
             if (imagePath != null && !string.IsNullOrEmpty(imagePath.ToString()))

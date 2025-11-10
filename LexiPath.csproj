@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Admin\EditQuiz.aspx" />
     <Content Include="Admin\ManageCategories.aspx" />
     <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="Admin\ManageQuizzes.aspx" />
@@ -219,6 +220,13 @@
     </Compile>
     <Compile Include="Admin\AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\EditQuiz.aspx.cs">
+      <DependentUpon>EditQuiz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\EditQuiz.aspx.designer.cs">
+      <DependentUpon>EditQuiz.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\ManageCategories.aspx.cs">
       <DependentUpon>ManageCategories.aspx</DependentUpon>

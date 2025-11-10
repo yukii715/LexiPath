@@ -10,6 +10,7 @@
     
     <div class="card shadow-sm border-0">
         <div class="card-body">
+       
             <asp:GridView ID="gvQuizzes" runat="server" 
                 AutoGenerateColumns="False" 
                 CssClass="table table-hover align-middle"
@@ -21,6 +22,7 @@
                 
                 <HeaderStyle CssClass="table-light" />
                 <Columns>
+                 
                     <asp:BoundField DataField="QuizID" HeaderText="ID" ReadOnly="True" SortExpression="QuizID" />
                     <asp:BoundField DataField="Title" HeaderText="Title" SortExpression="Title" />
                     <asp:BoundField DataField="LanguageName" HeaderText="Language" SortExpression="LanguageName" />
@@ -42,19 +44,15 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
-        
-                            <asp:HyperLink ID="hlManageQuestions" runat="server"
-                                NavigateUrl='<%# "ManageQuizQuestions.aspx?QuizID=" + Eval("QuizID") %>'
-                                Text="Questions"
-                                CssClass="btn btn-info btn-sm" />
                             
-                            <asp:Button ID="btnEdit" runat="server" 
-                                CommandName="ShowEditModal" 
-                                CommandArgument='<%# Eval("QuizID") %>' 
-                                Text="Edit" 
-                                CssClass="btn btn-secondary btn-sm" 
+                            <asp:LinkButton ID="btnEdit" runat="server"
+                                CommandName="EditQuiz"
+                                CommandArgument='<%# Eval("QuizID") %>'
+                                ToolTip="Edit Details & Manage Questions"
+                                Text="Edit / Questions"
+                                CssClass="btn btn-secondary btn-sm"
                                 Enabled='<%# !(bool)Eval("IsDeleted") %>' />
-                            
+            
                             <asp:Button ID="btnDelete" runat="server" 
                                 CommandName="DeleteQuiz" 
                                 CommandArgument='<%# Eval("QuizID") %>' 
@@ -70,6 +68,7 @@
         </div>
     </div>
 
+    <%-- The "Add New" modal stays the same --%>
     <div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <asp:UpdatePanel ID="upAddQuiz" runat="server">
@@ -124,60 +123,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editQuizModal" tabindex="-1" aria-labelledby="editQuizModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <asp:UpdatePanel ID="upEditQuiz" runat="server">
-                <ContentTemplate>
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editQuizModalLabel">Edit Quiz / Practice</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <asp:Label ID="lblEditMessage" runat="server" EnableViewState="false" CssClass="mb-3"></asp:Label>
-                            <asp:HiddenField ID="hdnEditQuizID" runat="server" Value="0" />
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label class="form-label">Title</label>
-                                    <asp:TextBox ID="txtEditTitle" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Description</label>
-                                    <asp:TextBox ID="txtEditDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Language</label>
-                                    <asp:DropDownList ID="ddlEditLanguage" runat="server" CssClass="form-select"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Update Image (Optional)</label>
-                                    <asp:Image ID="imgEditPreview" runat="server" CssClass="img-fluid rounded mb-2" style="max-height: 100px;" />
-                                    <asp:FileUpload ID="fileUploadEditImage" runat="server" CssClass="form-control" />
-                                </div>
-                                <div class="col-12">
-                                    <asp:CheckBox ID="chkEditIsPractice" runat="server" Text=" This is a Practice (not a Quiz)" CssClass="form-check-label" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Related Courses (Hold Ctrl to select multiple)</label>
-                                    <asp:ListBox ID="lstEditCourses" runat="server" CssClass="form-control" SelectionMode="Multiple" Rows="6"></asp:ListBox>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Related Tags (Hold Ctrl to select multiple)</label>
-                                    <asp:ListBox ID="lstEditTags" runat="server" CssClass="form-control" SelectionMode="Multiple" Rows="6"></asp:ListBox>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <asp:Button ID="btnUpdateQuiz" runat="server" Text="Update Quiz" CssClass="btn btn-success" OnClick="btnUpdateQuiz_Click" />
-                        </div>
-                    </div>
-                </ContentTemplate>
-                <Triggers>
-                    <asp:PostBackTrigger ControlID="btnUpdateQuiz" />
-                </Triggers>
-            </asp:UpdatePanel>
-        </div>
-    </div>
+    <%-- The "Edit" modal has been REMOVED --%>
     
 </asp:Content>
