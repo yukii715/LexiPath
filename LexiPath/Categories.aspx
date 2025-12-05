@@ -96,7 +96,6 @@
             transform: scale(1.05);
         }
         
-        /* Removed custom focus-within styles to rely on default Bootstrap behavior for a clean focus ring */
 
         .text-primary {
             color: #667eea !important; 

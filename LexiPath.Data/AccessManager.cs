@@ -12,10 +12,6 @@ namespace LexiPath.Data
             return ConfigurationManager.ConnectionStrings["LexiPathDB"].ConnectionString;
         }
 
-        /**
-         * Called when a registered user clicks "Start Lesson".
-         * Creates a new, incomplete record.
-         */
         public void StartCourse(int userId, int courseId)
         {
             string sqlCheck = "SELECT COUNT(*) FROM AccessRecord WHERE UserID = @UserID AND CourseID = @CourseID AND is_completed = 0";
@@ -45,10 +41,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * Called when a registered user clicks "End Lesson".
-         * Finds the active record and marks it as complete.
-         */
         public void EndCourse(int userId, int courseId)
         {
             string sqlUpdate = @"
@@ -92,10 +84,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Gets all Course IDs a user has completed.
-         * Returns a HashSet for very fast lookups.
-         */
         public HashSet<int> GetCompletedCourseIds(int userId)
         {
             HashSet<int> courseIds = new HashSet<int>();
@@ -118,9 +106,6 @@ namespace LexiPath.Data
             return courseIds;
         }
 
-        /**
-         * NEW: Gets the total number of courses a user has completed.
-         */
         public int GetCompletedCourseCount(int userId)
         {
             string sql = "SELECT COUNT(DISTINCT CourseID) FROM AccessRecord WHERE UserID = @UserID AND is_completed = 1";
@@ -137,11 +122,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Calculates the total active learning minutes for a user, 
-         * enforcing a maximum of 10 minutes per completed session 
-         * to exclude excessive idle time, as per rule.
-         */
         public double GetTotalLearningMinutes(int userId)
         {
             string sql = @"
