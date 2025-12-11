@@ -682,7 +682,6 @@ namespace LexiPath.Data
             return items.OrderBy(i => i.SequenceOrder).ToList();
         }
 
-        // *** UPDATED METHOD: Returns INT (SCOPE_IDENTITY) for Auto-Expand ***
         public int CreateLearningItem(int courseId, string type, int sequence)
         {
             string sql;
@@ -765,7 +764,6 @@ namespace LexiPath.Data
         // PHRASE DETAIL MANAGEMENT
         // =============================================
 
-        // *** UPDATED METHOD: Uses empty strings for Placeholders ***
         public void AddPhraseDetail(int phraseId, string type, string content)
         {
             string sql = "INSERT INTO PhraseDetail (PhraseID, DetailType, Content) VALUES (@PID, @Type, @Content)";

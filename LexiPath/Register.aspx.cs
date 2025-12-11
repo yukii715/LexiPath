@@ -37,25 +37,20 @@ namespace LexiPath
 
                 UserManager manager = new UserManager();
 
-                // --- NEW: EXPLICIT VALIDATION CHECKS ---
-
-                // 1. Check Username
                 if (manager.IsUsernameTaken(username))
                 {
                     lblMessage.Text = "That username is already taken. Please choose another.";
                     lblMessage.CssClass = "d-block mb-3 text-danger font-weight-bold text-center";
-                    return; // Stop here
+                    return; 
                 }
 
-                // 2. Check Email
                 if (manager.IsEmailTaken(email))
                 {
                     lblMessage.Text = "That email is already registered. Please sign in.";
                     lblMessage.CssClass = "d-block mb-3 text-danger font-weight-bold text-center";
-                    return; // Stop here
+                    return; 
                 }
 
-                // 3. Proceed to Register
                 string hashedPassword = HashPassword(password);
                 bool registrationSuccess = manager.RegisterUser(username, email, hashedPassword);
 
@@ -71,7 +66,6 @@ namespace LexiPath
                 }
                 else
                 {
-                    // Fallback error (should rarely happen now)
                     lblMessage.Text = "Registration failed. Please try again.";
                     lblMessage.CssClass = "d-block mb-3 text-danger font-weight-bold text-center";
                 }

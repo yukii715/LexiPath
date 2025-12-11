@@ -132,7 +132,6 @@ namespace LexiPath
                 manager.SaveQuizAttempt(currentQuiz.QuizID, currentUser.UserID, scorePercent);
             }
 
-            // We don't exit immediately here; user views results then clicks "Close"
         }
 
         protected void lnkBack_Click(object sender, EventArgs e) { ExitQuiz(); }

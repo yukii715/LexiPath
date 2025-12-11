@@ -11,11 +11,9 @@ namespace LexiPath
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Clear all session variables
             Session.Clear();
             Session.Abandon();
 
-            // Redirect to the home page
             Response.Redirect("~/Home.aspx");
         }
     }

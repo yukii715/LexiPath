@@ -16,13 +16,6 @@ namespace LexiPath.Data
 
         // --- QUIZ RETRIEVAL ---
 
-        /**
-         * Gets all quizzes, with optional search filter (Title, Description, or Tag)
-         * and optional IsPractice filter.
-         */
-        /**
-         * UPDATED: Now filters by LanguageID
-         */
         public List<Quiz> GetAllQuizzes(string searchTerm, bool? isPractice, int languageId)
         {
             List<Quiz> quizzes = new List<Quiz>();
@@ -103,9 +96,6 @@ namespace LexiPath.Data
             return courses;
         }
 
-        /**
-         * Gets all questions for a specific quiz, ordered by sequence.
-         */
         public List<QuizQuestion> GetQuizQuestions(int quizId)
         {
             List<QuizQuestion> questions = new List<QuizQuestion>();
@@ -172,9 +162,6 @@ namespace LexiPath.Data
 
         // --- ATTEMPT MANAGEMENT ---
 
-        /**
-         * Saves a quiz attempt for a registered user.
-         */
         public void SaveQuizAttempt(int quizId, int userId, int score)
         {
             string sql = "INSERT INTO QuizAttempt (QuizID, UserID, Score, AttemptedAt) VALUES (@QuizID, @UserID, @Score, GETDATE())";
@@ -192,9 +179,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW (READ): Gets all Quizzes/Practices for the admin grid
-         */
         public DataTable GetAllQuizzesForAdmin()
         {
             DataTable dt = new DataTable();
@@ -228,9 +212,6 @@ namespace LexiPath.Data
             return dt;
         }
 
-        /**
-         * UPDATED (READ): Gets details for a single quiz/practice for the Edit Modal
-         */
         public Quiz GetQuizDetails(int quizId)
         {
             Quiz quiz = null;
@@ -275,22 +256,16 @@ namespace LexiPath.Data
                 }
             }
 
-            // --- THIS IS THE CRITICAL FIX ---
-            // If we found a quiz, now we go get its questions
             if (quiz != null)
             {
                 quiz.Questions = GetQuizQuestions(quizId);
-                quiz.RelatedCourses = GetQuizRelatedCourses(quizId); // Also get related courses
+                quiz.RelatedCourses = GetQuizRelatedCourses(quizId); 
             }
-            // --- END OF FIX ---
+            
 
             return quiz;
         }
 
-
-        /**
-         * NEW (CREATE): Inserts a new Quiz/Practice
-         */
         public bool CreateQuiz(string title, string description, int languageId, bool isPractice, string imagePath, int[] selectedCourseIds, int[] selectedTagIds)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -357,9 +332,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW (UPDATE): Updates an existing Quiz/Practice
-         */
         public bool UpdateQuiz(int quizId, string title, string description, int languageId, bool isPractice, string imagePath, int[] selectedCourseIds, int[] selectedTagIds)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -441,12 +413,8 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW (DELETE): Marks a Quiz/Practice as deleted
-         */
         public void DeactivatedQuiz(int quizId)
         {
-            // We'll use a soft delete
             string sql = "UPDATE Quiz SET isActivated = 0 WHERE QuizID = @QuizID";
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
@@ -459,9 +427,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Activates a quiz
-         */
         public void ActivateQuiz(int quizId)
         {
             string sql = "UPDATE Quiz SET isActivated = 1 WHERE QuizID = @QuizID";
@@ -477,7 +442,6 @@ namespace LexiPath.Data
         }
 
         // --- Helper methods to get data for dropdowns ---
-
         public DataTable GetAllCourses()
         {
             DataTable dt = new DataTable();
@@ -510,12 +474,6 @@ namespace LexiPath.Data
             return dt;
         }
 
-        // You might want methods to get user's past attempts/high scores later
-
-        /**
-         * NEW: Gets all Quiz IDs a user has attempted.
-         * Returns a HashSet for very fast lookups.
-         */
         public HashSet<int> GetAttemptedQuizIds(int userId)
         {
             HashSet<int> quizIds = new HashSet<int>();
@@ -537,16 +495,10 @@ namespace LexiPath.Data
             return quizIds;
         }
 
-        /**
-         * NEW: Finds the Practice ID associated with a specific Course ID.
-         * Returns 0 if no practice is found.
-         */
         public int GetPracticeQuizIDByCourseID(int courseId)
         {
             int practiceQuizId = 0; // Default to 0 (not found)
 
-            // This query finds the one quiz that is a "Practice" AND
-            // is linked to the specific Course ID in the junction table.
             string sql = @"
                 SELECT TOP 1 q.QuizID 
                 FROM Quiz q
@@ -560,7 +512,6 @@ namespace LexiPath.Data
                     cmd.Parameters.AddWithValue("@CourseID", courseId);
                     conn.Open();
 
-                    // ExecuteScalar is perfect for getting just one value
                     object result = cmd.ExecuteScalar();
 
                     if (result != null && result != DBNull.Value)
@@ -572,9 +523,6 @@ namespace LexiPath.Data
             return practiceQuizId;
         }
 
-        /**
-         * NEW: Gets the total number of quizzes a user has attempted.
-         */
         public int GetQuizAttemptCount(int userId)
         {
             string sql = "SELECT COUNT(*) FROM QuizAttempt WHERE UserID = @UserID";
@@ -590,9 +538,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW (READ): Gets all available Question Types for a dropdown
-         */
         public DataTable GetQuestionTypes()
         {
             DataTable dt = new DataTable();
@@ -664,9 +609,6 @@ namespace LexiPath.Data
 
         #region Question & Option Management (for EditQuiz.aspx)
 
-        /**
-         * NEW: Gets the string name of a question type
-         */
         public string GetQuestionTypeNameById(int questionTypeID)
         {
             string sql = "SELECT TypeName FROM QuestionType WHERE QuestionTypeID = @QuestionTypeID";
@@ -682,10 +624,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Adds a new question to a quiz.
-         * If the question is an MCQ, it adds two blank options by default.
-         */
         public bool CreateQuestion(int quizId, string questionText, int questionTypeID, string imagePath)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -759,10 +697,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Deletes a question and its options.
-         * Then re-orders the remaining questions to fill the sequence gap.
-         */
         public bool DeleteQuestion(int questionId)
         {
             int quizId = 0;
@@ -836,9 +770,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Swaps the sequence order of a question with its neighbor (Up or Down).
-         */
         public bool ReorderQuestion(int quizId, int questionId, string direction)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -926,9 +857,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Updates a question's text, type, image, and options.
-         */
         public bool UpdateQuestion(int questionId, string questionText, int questionTypeID, string imagePath, string correctAnswer, List<QuizAnswerOption> options)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -1009,9 +937,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Adds a single blank answer option to a question.
-         */
         public bool AddBlankOption(int questionId)
         {
             string sql = "INSERT INTO QuizAnswerOption (QuestionID, OptionText, IsCorrect) VALUES (@QuestionID, 'New Option', 0)";
@@ -1035,9 +960,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Deletes a single answer option.
-         */
         public bool DeleteOption(int optionId)
         {
             string sql = "DELETE FROM QuizAnswerOption WHERE OptionID = @OptionID";
@@ -1061,9 +983,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Gets the count of all active quizzes and practices.
-         */
         public int GetTotalQuizCount()
         {
             string sql = "SELECT COUNT(QuizID) FROM Quiz WHERE isActivated = 1";

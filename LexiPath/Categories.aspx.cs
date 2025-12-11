@@ -10,11 +10,9 @@ namespace LexiPath
 {
     public partial class Categories : System.Web.UI.Page
     {
-        // Class-level variable to hold the chosen language
         private int currentLanguageId = 1; // Default to Korean
         protected void Page_Load(object sender, EventArgs e)
         {
-            // --- NEW: Read the LanguageID from the Session ---
             if (Session["LanguageID"] != null)
             {
                 currentLanguageId = (int)Session["LanguageID"];
@@ -26,22 +24,17 @@ namespace LexiPath
             }
         }
 
-        // NEW: This event fires when the search button is clicked
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            // We just re-run the BindCategories method.
-            // It will now read the text from the txtSearch box.
             BindCategories();
         }
 
         private void BindCategories()
         {
-            // 1. Get the search term from the textbox
             string searchTerm = txtSearch.Text.Trim();
 
-            // 2. Pass the search term to the manager
             CourseManager manager = new CourseManager();
-            // --- UPDATED: Pass the LanguageID to the manager ---
+            
             rptCategories.DataSource = manager.GetAllCategories(searchTerm, currentLanguageId);
             rptCategories.DataBind();
         }

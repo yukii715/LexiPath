@@ -38,7 +38,6 @@ namespace LexiPath
             if (!IsPostBack)
             {
                 BindCourseDetails();
-                // FIX: Only bind practices once on initial load
                 BindPractices();
                 BindForum();
             }
@@ -137,7 +136,6 @@ namespace LexiPath
             }
         }
 
-        // NEW: Dedicated method to bind practices
         private void BindPractices()
         {
             QuizManager quizManager = new QuizManager();
@@ -180,16 +178,12 @@ namespace LexiPath
 
                 if (practiceQuiz != null)
                 {
-                    // 1. Set Session Data (Critical for the quiz to load)
                     Session["ActiveQuizObject"] = practiceQuiz;
                     Session["ActiveQuizID"] = quizId;
                     Session["ReturnCourseID"] = currentCourseId;
 
-                    // 2. Generate URL for the popup
                     string url = ResolveUrl("~/QuizAttempt.aspx");
 
-                    // 3. Inject Script to Open New Tab
-                    // This mimics what you did in QuizDetail.aspx.cs
                     string script = $"window.open('{url}', '_blank');";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "openPracticeTab", script, true);
                 }
@@ -235,11 +229,9 @@ namespace LexiPath
                         ? "Admin Mode: You have full access."
                         : "You have completed this course! You can review the lesson, or try the practice module below.";
 
-                    pnlPractice.Visible = true; // Show the panel
+                    pnlPractice.Visible = true; 
                     pnlPracticeLocked.Visible = false;
 
-                    // NOTE: We do NOT rebind data here. 
-                    // Data is either bound in !IsPostBack or restored from ViewState.
                 }
                 else
                 {

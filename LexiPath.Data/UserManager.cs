@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration; // Add this
+using System.Configuration; 
 using System.Data;
-using System.Data.SqlClient; // Add this
+using System.Data.SqlClient; 
 
 namespace LexiPath.Data
 {
     public class UserManager
     {
-        // Helper method to get the connection string from Web.config
         private string GetConnectionString()
         {
-            // You will need to add a reference to System.Configuration
             return ConfigurationManager.ConnectionStrings["LexiPathDB"].ConnectionString;
         }
 
-        /**
-         * REGISTRATION (INSERT)
-         * This fulfills the "Insert new records" requirement.
-         */
         public bool RegisterUser(string username, string email, string passwordHash)
         {
             // Use 'using' blocks to ensure connections are closed
@@ -49,10 +43,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * LOGIN (READ)
-         * This fulfills the "Display records" and "Authentication" requirements.
-         */
         public User AuthenticateUser(string username, string passwordHash)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -130,11 +120,6 @@ namespace LexiPath.Data
             }
         }
 
-
-
-        /**
-         * READ: Gets a user's full profile info
-         */
         public User GetUserProfile(int userId)
         {
             User user = null;
@@ -163,9 +148,6 @@ namespace LexiPath.Data
             return user;
         }
 
-        /**
-         * UPDATE: Updates a user's username and email
-         */
         public bool UpdateUserProfile(int userId, string username, string email)
         {
             string sql = "UPDATE Users SET Username = @Username, Email = @Email WHERE UserID = @UserID";
@@ -182,9 +164,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * UPDATE: Updates a user's password
-         */
         public bool UpdatePassword(int userId, string newPasswordHash)
         {
             string sql = "UPDATE Users SET PasswordHash = @PasswordHash WHERE UserID = @UserID";
@@ -200,9 +179,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * UPDATE: Updates a user's profile picture path
-         */
         public bool UpdateProfilePicture(int userId, string imagePath)
         {
             string sql = "UPDATE Users SET ProfilePicPath = @ImagePath WHERE UserID = @UserID";
@@ -218,9 +194,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * NEW: Gets all users as a DataTable (easy to bind to a GridView)
-         */
         public DataTable GetAllUsers()
         {
             DataTable dt = new DataTable();
@@ -240,9 +213,6 @@ namespace LexiPath.Data
             return dt;
         }
 
-        /**
-         * NEW: Toggles a user's status between "Active" and "Blocked"
-         */
         public void ToggleUserStatus(int userId)
         {
             string currentStatus = "";
@@ -278,12 +248,7 @@ namespace LexiPath.Data
         }
 
 
-
-
         // --- CORE CRUD OPERATIONS (Collection & Liking) ---
-        /**
-         * Toggles the IsCollected status of a course for a user (bookmark).
-         */
         public bool ToggleCollection(int userId, int courseId)
         {
             string sqlCheck = "SELECT IsCollected FROM UserCourseInteraction WHERE UserID = @UserID AND CourseID = @CourseID";
@@ -331,9 +296,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * Toggles the IsLiked status of a course for a user.
-         */
         public bool ToggleLike(int userId, int courseId)
         {
             string sqlCheck = "SELECT IsLiked FROM UserCourseInteraction WHERE UserID = @UserID AND CourseID = @CourseID";
@@ -380,9 +342,6 @@ namespace LexiPath.Data
             }
         }
 
-        /**
-         * Reads the current status of interactions for a course.
-         */
         public Dictionary<string, bool> GetInteractionStatus(int userId, int courseId)
         {
             var status = new Dictionary<string, bool> { { "IsCollected", false }, { "IsLiked", false } };
@@ -406,9 +365,6 @@ namespace LexiPath.Data
             return status;
         }
 
-        /**
-         * NEW: Gets all courses collected (bookmarked) by the user.
-         */
         public List<Course> GetCollectedCourses(int userId, string searchTerm, string orderBy)
         {
             List<Course> courses = new List<Course>();
@@ -423,13 +379,11 @@ namespace LexiPath.Data
                 sql += " AND c.CourseName LIKE @SearchTerm";
             }
 
-            // --- NEW: Dynamic Ordering ---
             string orderClause = "c.CourseName ASC"; // Default alphabetical
             if (orderBy == "DateAdded")
             {
                 orderClause = "uci.CollectedAt ASC"; // Oldest to newest
             }
-            // --- END NEW ---
 
             sql += $" ORDER BY {orderClause}";
 
@@ -461,9 +415,6 @@ namespace LexiPath.Data
             return courses;
         }
 
-        /**
-         * NEW: Gets all courses liked by the user.
-         */
         public List<Course> GetLikedCourses(int userId, string searchTerm, string orderBy)
         {
             List<Course> courses = new List<Course>();
@@ -478,13 +429,11 @@ namespace LexiPath.Data
                 sql += " AND c.CourseName LIKE @SearchTerm";
             }
 
-            // --- NEW: Dynamic Ordering ---
             string orderClause = "c.CourseName ASC"; // Default alphabetical
             if (orderBy == "DateAdded")
             {
                 orderClause = "uci.LikedAt ASC"; // Oldest to newest
             }
-            // --- END NEW ---
 
             sql += $" ORDER BY {orderClause}";
 
@@ -516,12 +465,8 @@ namespace LexiPath.Data
             return courses;
         }
 
-        /**
-         * NEW: Gets the count of all active registered users.
-         */
         public int GetTotalActiveUserCount()
         {
-            // We assume 'IsAdmin = 0' are regular users and only count 'Active' status
             string sql = "SELECT COUNT(UserID) FROM Users WHERE Status = 'Active' AND IsAdmin = 0";
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -529,7 +474,7 @@ namespace LexiPath.Data
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     conn.Open();
-                    // ExecuteScalar is perfect for getting a single count value
+                    
                     return (int)cmd.ExecuteScalar();
                 }
             }

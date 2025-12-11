@@ -54,13 +54,8 @@ namespace LexiPath
             }
         }
 
-        /**
-         * This button click securely starts the quiz
-         */
         protected void btnStartQuiz_Click(object sender, EventArgs e)
         {
-            // The full quiz object (with questions) is already in the Session
-            // from our Page_Load. Now we just set the "Active" flag.
             Session["ActiveQuizID"] = currentQuizId;
 
             // Use JavaScript to open the new tab
@@ -72,7 +67,6 @@ namespace LexiPath
         // Helper function for the "Back" button
         public string GetDetailUrl(object courseId)
         {
-            // This just creates a simple link, no complex return URL needed here
             return $"CourseDetail.aspx?CourseID={courseId}";
         }
 

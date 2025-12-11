@@ -64,13 +64,13 @@
         }
     </script>
     <style>
-        /* --- 1. PAGE & LAYOUT --- */
+        /* --- PAGE & LAYOUT --- */
         body {
             background-color: #f0f2f5; /* Softer gray background */
             font-family: 'Poppins', sans-serif; /* Ensure you have this font or system default */
         }
 
-        /* --- 2. MAIN CARD DESIGN --- */
+        /* --- MAIN CARD DESIGN --- */
         .content-card {
             border: none;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Smooth physics-based ease */
@@ -88,9 +88,9 @@
             box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* --- 3. IMAGE CONTAINER (The Fix) --- */
+        /* --- IMAGE CONTAINER --- */
         .learning-image {
-            height: 320px; /* Fixed height for consistency */
+            height: 320px; 
             width: 100%; 
             object-fit: contain; /* Ensures the whole image is visible */
             background-color: #f8f9fa; /* Light gray background for transparent images */
@@ -104,7 +104,7 @@
             transform: scale(1.02);
         }
 
-        /* --- 4. TYPOGRAPHY & COLORS --- */
+        /* --- TYPOGRAPHY & COLORS --- */
         .text-primary {
             color: #667eea !important; /* Brand Purple */
         }
@@ -114,7 +114,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* --- 5. AUDIO BUTTON --- */
+        /* --- AUDIO BUTTON --- */
         .btn-audio {
             background-color: #eff2f7;
             color: #667eea;
@@ -140,7 +140,7 @@
             transform: scale(0.9);
         }
 
-        /* --- 6. NAVIGATION BUTTONS --- */
+        /* --- NAVIGATION BUTTONS --- */
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -168,7 +168,7 @@
             border-color: #dee2e6;
         }
 
-        /* --- 7. PROGRESS TEXT --- */
+        /* --- PROGRESS TEXT --- */
         .text-secondary {
             font-family: monospace; /* Makes the "1 / 5" look like code/data */
             letter-spacing: 1px;

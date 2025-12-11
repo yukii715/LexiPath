@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.UI;
 using LexiPath.Data; 
-using System.Security.Cryptography; // For password hashing
-using System.Text; // For password hashing
+using System.Security.Cryptography; 
+using System.Text; 
 
 namespace LexiPath
 {
@@ -32,37 +32,29 @@ namespace LexiPath
         {
             if (Page.IsValid)
             {
-                // 1. Get user input
                 string username = txtUsername.Text.Trim();
-                string password = txtPassword.Text; // Password should not be trimmed for security
+                string password = txtPassword.Text; 
 
-                // 2. Hash the password for comparison (MUST match how it was hashed during registration)
                 string hashedPassword = HashPassword(password);
 
-                // 3. Authenticate using your UserManager
                 UserManager manager = new UserManager();
                 User authenticatedUser = manager.AuthenticateUser(username, hashedPassword);
 
                 if (authenticatedUser != null)
                 {
-                    // 4. Authentication SUCCESS! Create the user session.
                     Session["User"] = authenticatedUser;
 
-                    // Redirect the user based on role
                     if (authenticatedUser.IsAdmin)
                     {
-                        // Redirect to the Admin Panel for administrators
                         Response.Redirect("~/Admin/AdminDashboard.aspx");
                     }
                     else
                     {
-                        // Redirect to the Profile or Home page for regular users
                         Response.Redirect("~/Home.aspx");
                     }
                 }
                 else
                 {
-                    // 5. Authentication FAILURE
                     lblMessage.Text = "Invalid username or password.";
                 }
             }

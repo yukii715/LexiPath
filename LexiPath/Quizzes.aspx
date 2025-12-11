@@ -52,7 +52,6 @@
                     <div class="card h-100 border-0 shadow-sm hover-lift" style="transition: transform 0.3s ease, box-shadow 0.3s ease;">
 
                         <div class="position-relative overflow-hidden" style="height: 180px;">
-                            <!-- REMOVED THE <a> TAG WRAPPING THE IMAGE -->
                             <img src='<%# GetImagePath(Eval("ImagePath")) %>'
                                 class="card-img-top w-100 h-100"
                                 alt='<%# Eval("Title") %>'
@@ -117,6 +116,5 @@
             color: white;
         }
         
-        /* Removed custom focus-within styles to rely on default Bootstrap behavior for a clean focus ring */
     </style>
 </asp:Content>

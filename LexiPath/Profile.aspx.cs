@@ -109,23 +109,18 @@ namespace LexiPath
             string newUsername = txtUsername.Text.Trim();
             string newEmail = txtEmail.Text.Trim();
 
-            // --- NEW: SERVER-SIDE VALIDATION ---
-
-            // 1. Check if Username is taken by someone else
             if (userManager.IsUsernameTaken(newUsername, currentUser.UserID))
             {
                 ShowNotification("error", "That username is already taken.");
                 return;
             }
 
-            // 2. Check if Email is taken by someone else
             if (userManager.IsEmailTaken(newEmail, currentUser.UserID))
             {
                 ShowNotification("error", "That email is already in use.");
                 return;
             }
 
-            // 3. Update
             if (userManager.UpdateUserProfile(currentUser.UserID, newUsername, newEmail))
             {
                 ShowNotification("success", "Profile updated successfully!");
@@ -145,21 +140,18 @@ namespace LexiPath
             string newPass = txtNewPassword.Text;
             string confirmPass = txtConfirmPassword.Text;
 
-            // 1. Manual Check: Are fields empty?
             if (string.IsNullOrEmpty(currentPass) || string.IsNullOrEmpty(newPass) || string.IsNullOrEmpty(confirmPass))
             {
                 ShowNotification("warning", "All password fields are required.");
                 return;
             }
 
-            // 2. Manual Check: Do passwords match?
             if (newPass != confirmPass)
             {
                 ShowNotification("error", "New passwords do not match.");
                 return;
             }
 
-            // 3. Manual Check: Complexity (Regex)
             string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$";
             if (!System.Text.RegularExpressions.Regex.IsMatch(newPass, passwordPattern))
             {
@@ -167,7 +159,6 @@ namespace LexiPath
                 return;
             }
 
-            // 4. Verify Current Password (Database Check)
             string currentHash = HashPassword(currentPass);
             User verifiedUser = userManager.AuthenticateUser(currentUser.Username, currentHash);
 
@@ -177,13 +168,11 @@ namespace LexiPath
                 return;
             }
 
-            // 5. Save to Database
             string newHash = HashPassword(newPass);
             if (userManager.UpdatePassword(currentUser.UserID, newHash))
             {
                 ShowNotification("success", "Password changed successfully!");
 
-                // Clear fields on success
                 txtCurrentPassword.Text = "";
                 txtNewPassword.Text = "";
                 txtConfirmPassword.Text = "";

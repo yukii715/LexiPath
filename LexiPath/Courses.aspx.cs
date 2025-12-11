@@ -148,7 +148,6 @@ namespace LexiPath
             lnkPhrase.NavigateUrl = "~/Courses.aspx?type=Phrase";
         }
 
-        // --- UPDATED: Logic to swap button styles ---
         private void SetActiveFilterLink()
         {
             // Base styles

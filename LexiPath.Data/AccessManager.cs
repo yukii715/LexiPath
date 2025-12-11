@@ -87,7 +87,7 @@ namespace LexiPath.Data
         public HashSet<int> GetCompletedCourseIds(int userId)
         {
             HashSet<int> courseIds = new HashSet<int>();
-            // We only select courses that are marked as complete
+            
             string sql = "SELECT DISTINCT CourseID FROM AccessRecord WHERE UserID = @UserID AND is_completed = 1";
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -116,7 +116,7 @@ namespace LexiPath.Data
                 {
                     cmd.Parameters.AddWithValue("@UserID", userId);
                     conn.Open();
-                    // ExecuteScalar is perfect for getting a single value (like a count)
+                    
                     return (int)cmd.ExecuteScalar();
                 }
             }

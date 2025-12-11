@@ -24,7 +24,6 @@
             }
         };
 
-        // --- UPDATED: Close Tab Logic ---
         function confirmEndQuiz(event) {
             event.preventDefault();
 
@@ -41,17 +40,16 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         allowNavigation();
-                        closeOrRedirect(); // Call new helper
+                        closeOrRedirect(); 
                     }
                 });
             } else {
                 allowNavigation();
-                closeOrRedirect(); // Call new helper
+                closeOrRedirect(); r
             }
             return false;
         }
 
-        // NEW HELPER FUNCTION
         function closeOrRedirect() {
             // Try to close the window
             window.close();
@@ -191,7 +189,6 @@
                         <p class="fs-4 mb-0">You scored</p>
                         <strong class="display-1 d-block my-2"><asp:Literal ID="litFinalScore" runat="server"></asp:Literal></strong>
                         
-                        <%-- UPDATED: Back Button closes tab --%>
                         <asp:Button ID="btnBackToQuiz" runat="server" Text="Close Quiz" 
                             CssClass="btn btn-light btn-lg rounded-pill px-5 mt-4 fw-bold shadow-sm" 
                             OnClientClick="allowNavigation(); window.close(); return false;" />
